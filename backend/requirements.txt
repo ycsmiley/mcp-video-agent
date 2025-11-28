@@ -1,0 +1,8 @@
+modal
+llama-index
+llama-index-vector-stores-chroma
+llama-index-embeddings-openai
+openai
+python-multipart
+fastapi
+uvicorn
