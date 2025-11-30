@@ -303,8 +303,8 @@ with gr.Blocks(title="🎥 MCP Video Agent") as demo:
     gr.Markdown(f"""
     ### ⚡ Key Innovation: Smart Frame Caching
     
-    **First Query**: Video is analyzed deeply and cached (~8-12 seconds)  
-    **Follow-up Queries**: Instant responses using cached context (~2-3 seconds, 90% cost reduction!)  
+    **First Query**: Video is analyzed deeply and cached (8-12 seconds)  
+    **Follow-up Queries**: Instant responses using cached context (2-3 seconds, 90% cost reduction!)  
     **Cache Duration**: 1 hour - ask multiple questions without reprocessing
     
     ---
