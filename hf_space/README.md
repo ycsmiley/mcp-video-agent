@@ -30,6 +30,16 @@ tags:
 
 ---
 
+## 🎬 Demo Video
+
+https://github.com/user-attachments/assets/MCP_hackathon.mp4
+
+<video src="MCP_hackathon.mp4" controls width="100%"></video>
+
+*Watch the Video Agent in action - upload a video, ask questions, and receive voice responses!*
+
+---
+
 ## 🎯 What Makes This Special?
 
 An intelligent video analysis agent that combines **multimodal AI**, **voice interaction**, and **smart context caching** to create a natural conversation experience with your videos.
