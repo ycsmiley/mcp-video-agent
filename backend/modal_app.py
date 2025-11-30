@@ -380,7 +380,7 @@ def _internal_delete_cache(video_filename: str = "demo_video.mp4"):
     secrets=[Secret.from_name("my-elevenlabs-secret")],
     timeout=600
 )
-def _internal_speak_text(text: str):
+def _internal_speak_text(text: str, audio_filename: str = "response.mp3"):
     from elevenlabs.client import ElevenLabs
     import time
     
@@ -397,6 +397,7 @@ def _internal_speak_text(text: str):
         safe_text = text
     
     print(f"🗣️ Generating speech ({len(safe_text)} chars)...")
+    print(f"📁 Output file: {audio_filename}")
     start_time = time.time()
     
     try:
@@ -413,7 +414,8 @@ def _internal_speak_text(text: str):
             model_id="eleven_multilingual_v2"
         )
         
-        output_path = "/data/response.mp3"
+        # Use dynamic filename
+        output_path = f"/data/{audio_filename}"
         with open(output_path, "wb") as f:
             for chunk in audio_generator:
                 f.write(chunk)
@@ -421,7 +423,7 @@ def _internal_speak_text(text: str):
         vol.commit()
         
         elapsed = time.time() - start_time
-        print(f"✅ Speech generated in {elapsed:.2f}s")
+        print(f"✅ Speech generated in {elapsed:.2f}s: {output_path}")
         return output_path
     
     except Exception as e:
