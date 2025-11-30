@@ -64,6 +64,49 @@ def get_modal_function(function_name):
         print(f"❌ Failed to connect to Modal: {e}")
         return None
 
+def get_modal_volume():
+    """Get Modal Volume for file operations"""
+    try:
+        vol = modal.Volume.from_name("video-storage")
+        return vol
+    except Exception as e:
+        print(f"❌ Failed to connect to Modal Volume: {e}")
+        return None
+
+def upload_to_modal_volume(local_path, remote_filename):
+    """Upload file to Modal Volume using SDK"""
+    try:
+        vol = get_modal_volume()
+        if vol is None:
+            return False, "Failed to connect to Modal Volume"
+        
+        with open(local_path, 'rb') as f:
+            vol.write_file(remote_filename, f)
+        
+        print(f"✅ Uploaded to Modal Volume: {remote_filename}")
+        return True, "Success"
+    except Exception as e:
+        print(f"❌ Upload error: {e}")
+        return False, str(e)
+
+def download_from_modal_volume(remote_filename, local_path):
+    """Download file from Modal Volume using SDK"""
+    try:
+        vol = get_modal_volume()
+        if vol is None:
+            return False
+        
+        # Read file from volume
+        for chunk in vol.read_file(remote_filename):
+            with open(local_path, 'ab') as f:
+                f.write(chunk)
+        
+        print(f"✅ Downloaded from Modal Volume: {remote_filename}")
+        return True
+    except Exception as e:
+        print(f"❌ Download error: {e}")
+        return False
+
 # ==========================================
 # Gradio Interface Logic
 # ==========================================
@@ -115,25 +158,23 @@ def process_interaction(user_message, history, video_file, username, request: gr
     # 2. Upload to Modal Volume if needed
     if cache_key not in uploaded_videos_cache:
         history.append({"role": "user", "content": user_message})
-        history.append({"role": "assistant", "content": f"📤 Uploading video ({file_size_mb:.1f}MB)..."})
+        history.append({"role": "assistant", "content": f"📤 Uploading video ({file_size_mb:.1f}MB)... This may take a moment."})
         yield history
         
         try:
-            import subprocess
-            result = subprocess.run(
-                ["modal", "volume", "put", "video-storage", local_path, f"/{unique_filename}", "--force"],
-                capture_output=True,
-                text=True,
-                timeout=300
-            )
+            success, error_msg = upload_to_modal_volume(local_path, unique_filename)
             
-            if result.returncode != 0:
-                history[-1] = {"role": "assistant", "content": f"❌ Upload failed: {result.stderr}"}
+            if not success:
+                history[-1] = {"role": "assistant", "content": f"❌ Upload failed: {error_msg}"}
                 yield history
                 return
             
             uploaded_videos_cache[cache_key] = unique_filename
             print(f"✅ Video uploaded: {unique_filename}")
+            
+            # Brief pause to ensure volume sync
+            time.sleep(1)
+            
         except Exception as e:
             history[-1] = {"role": "assistant", "content": f"❌ Upload error: {str(e)}"}
             yield history
@@ -176,21 +217,25 @@ def process_interaction(user_message, history, video_file, username, request: gr
             audio_filename = f"audio_{unique_filename.replace('.mp4', '.mp3')}"
             speak_fn.remote(text_response, audio_filename=audio_filename)
             
-            # Download audio
-            time.sleep(2)
-            import subprocess
+            # Download audio using SDK
+            time.sleep(3)  # Wait for TTS to complete
             local_audio = f"/tmp/{audio_filename}"
+            
+            # Remove old file if exists
+            if os.path.exists(local_audio):
+                os.remove(local_audio)
             
             max_retries = 3
             for retry in range(max_retries):
-                result = subprocess.run(
-                    ["modal", "volume", "get", "video-storage", f"/{audio_filename}", local_audio],
-                    capture_output=True,
-                    text=True
-                )
+                success = download_from_modal_volume(audio_filename, local_audio)
                 
-                if result.returncode == 0 and os.path.exists(local_audio) and os.path.getsize(local_audio) > 1000:
+                if success and os.path.exists(local_audio) and os.path.getsize(local_audio) > 1000:
                     break
+                
+                # Clean up partial file
+                if os.path.exists(local_audio):
+                    os.remove(local_audio)
+                    
                 time.sleep(2)
             
             if os.path.exists(local_audio) and os.path.getsize(local_audio) > 1000:
