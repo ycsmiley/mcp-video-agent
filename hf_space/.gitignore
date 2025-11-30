@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.mp4
+*.mp3
+*.wav
+response_*.mp3
+audio_*.mp3
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# Gradio cache
+gradio_cached_examples/
+flagged/
+
+# ============================================
+# Deployment tools (not needed in HF Space)
+# ============================================
+deploy.sh
+QUICK_PUSH.sh
+test_local.sh
+DEPLOYMENT.md
+PUSH_TO_HF.md
+QUICKSTART.md
+CHECKLIST.md
+INDEX.md
+

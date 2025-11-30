@@ -72,3 +72,8 @@ videos/
 .env.local
 .env.*.local
 secrets.json
+
+
+# Other
+cookies.txt
+*.mp3
