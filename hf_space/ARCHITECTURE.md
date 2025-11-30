@@ -460,7 +460,7 @@ Check the "Logs" tab in your HF Space dashboard
 
 This is an open-source Hackathon project. Contributions welcome!
 
-**GitHub**: [mcp-video-agent](https://github.com/YOUR_USERNAME/mcp-video-agent)
+**GitHub**: [mcp-video-agent](https://github.com/ycsmiley/mcp-video-agent)
 
 ---
 

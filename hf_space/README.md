@@ -136,13 +136,13 @@ Enable Claude to analyze videos directly in your conversations!
 ## 🛠️ Technical Architecture
 
 ### Full Source Code
-📦 **GitHub Repository**: [mcp-video-agent](https://github.com/YOUR_USERNAME/mcp-video-agent)
+📦 **GitHub Repository**: [mcp-video-agent](https://github.com/ycsmiley/mcp-video-agent)
 
 📖 **Detailed Architecture**: See [ARCHITECTURE.md](./ARCHITECTURE.md) for in-depth technical documentation
 
 This HF Space contains the **frontend application**. The complete project includes:
 - `hf_space/` - This Gradio frontend (you're looking at it!)
-- `backend/` - Modal serverless backend ([view on GitHub](https://github.com/YOUR_USERNAME/mcp-video-agent/tree/main/backend))
+- `backend/` - Modal serverless backend ([view on GitHub](https://github.com/ycsmiley/mcp-video-agent/tree/main/backend))
 - `frontend/` - Alternative frontend for direct Modal integration
 
 **For Evaluators**: All backend code and deployment instructions are available in the GitHub repository.
