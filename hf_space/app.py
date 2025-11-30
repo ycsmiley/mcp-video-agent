@@ -74,14 +74,15 @@ def get_modal_volume():
         return None
 
 def upload_to_modal_volume(local_path, remote_filename):
-    """Upload file to Modal Volume using SDK"""
+    """Upload file to Modal Volume using SDK batch_upload"""
     try:
         vol = get_modal_volume()
         if vol is None:
             return False, "Failed to connect to Modal Volume"
         
-        with open(local_path, 'rb') as f:
-            vol.write_file(remote_filename, f)
+        # Use batch_upload with put_file
+        with vol.batch_upload() as batch:
+            batch.put_file(local_path, f"/{remote_filename}")
         
         print(f"✅ Uploaded to Modal Volume: {remote_filename}")
         return True, "Success"
@@ -90,15 +91,19 @@ def upload_to_modal_volume(local_path, remote_filename):
         return False, str(e)
 
 def download_from_modal_volume(remote_filename, local_path):
-    """Download file from Modal Volume using SDK"""
+    """Download file from Modal Volume using SDK read_file"""
     try:
         vol = get_modal_volume()
         if vol is None:
             return False
         
-        # Read file from volume
-        for chunk in vol.read_file(remote_filename):
-            with open(local_path, 'ab') as f:
+        # Clear file if exists
+        if os.path.exists(local_path):
+            os.remove(local_path)
+        
+        # Read file from volume (read_file returns an iterator of bytes)
+        with open(local_path, 'wb') as f:
+            for chunk in vol.read_file(f"/{remote_filename}"):
                 f.write(chunk)
         
         print(f"✅ Downloaded from Modal Volume: {remote_filename}")
@@ -124,10 +129,16 @@ def process_interaction(user_message, history, video_file, username, request: gr
     # Get user identifier for rate limiting
     user_id = username  # Use authenticated username
     
+    # ⭐ IMMEDIATELY show user message and "thinking" status
+    history = history + [{"role": "user", "content": user_message}]
+    history = history + [{"role": "assistant", "content": "⏳ Processing your request..."}]
+    yield history
+    
     # Check rate limit
     if not rate_limiter.is_allowed(user_id):
         remaining = rate_limiter.get_remaining(user_id)
-        yield history + [{"role": "assistant", "content": f"⚠️ Rate limit exceeded. You have {remaining} requests remaining this hour. Please try again later."}]
+        history[-1] = {"role": "assistant", "content": f"⚠️ Rate limit exceeded. You have {remaining} requests remaining this hour. Please try again later."}
+        yield history
         return
     
     # Show remaining requests
@@ -136,7 +147,8 @@ def process_interaction(user_message, history, video_file, username, request: gr
     
     # 1. Check video upload
     if video_file is None:
-        yield history + [{"role": "assistant", "content": "⚠️ Please upload a video first!"}]
+        history[-1] = {"role": "assistant", "content": "⚠️ Please upload a video first!"}
+        yield history
         return
     
     local_path = video_file
@@ -144,7 +156,8 @@ def process_interaction(user_message, history, video_file, username, request: gr
     # Check file size (100MB limit)
     file_size_mb = os.path.getsize(local_path) / (1024 * 1024)
     if file_size_mb > 100:
-        yield history + [{"role": "assistant", "content": f"❌ Video too large! Size: {file_size_mb:.1f}MB. Please upload a video smaller than 100MB."}]
+        history[-1] = {"role": "assistant", "content": f"❌ Video too large! Size: {file_size_mb:.1f}MB. Please upload a video smaller than 100MB."}
+        yield history
         return
     
     # Generate unique filename
@@ -157,8 +170,7 @@ def process_interaction(user_message, history, video_file, username, request: gr
     
     # 2. Upload to Modal Volume if needed
     if cache_key not in uploaded_videos_cache:
-        history.append({"role": "user", "content": user_message})
-        history.append({"role": "assistant", "content": f"📤 Uploading video ({file_size_mb:.1f}MB)... This may take a moment."})
+        history[-1] = {"role": "assistant", "content": f"📤 Uploading video ({file_size_mb:.1f}MB)... This may take a moment."}
         yield history
         
         try:
@@ -181,8 +193,7 @@ def process_interaction(user_message, history, video_file, username, request: gr
             return
     else:
         unique_filename = uploaded_videos_cache[cache_key]
-        history.append({"role": "user", "content": user_message})
-        history.append({"role": "assistant", "content": "♻️ Using cached video..."})
+        history[-1] = {"role": "assistant", "content": "♻️ Using cached video..."}
         yield history
     
     # 3. Analyze video via Modal
