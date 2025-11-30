@@ -32,9 +32,7 @@ tags:
 
 ## 🎬 Demo Video
 
-https://github.com/user-attachments/assets/MCP_hackathon.mp4
-
-<video src="MCP_hackathon.mp4" controls width="100%"></video>
+📺 **[Watch Demo Video on GitHub](https://github.com/ycsmiley/mcp-video-agent/blob/main/MCP_hackathon.mp4?raw=true)**
 
 *Watch the Video Agent in action - upload a video, ask questions, and receive voice responses!*
 
