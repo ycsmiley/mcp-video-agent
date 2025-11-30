@@ -153,7 +153,8 @@ def _internal_create_cache(video_filename: str = "demo_video.mp4", ttl_seconds: 
     image=image,
     volumes={"/data": vol},
     secrets=[Secret.from_name("my-google-secret")],
-    timeout=600
+    timeout=600,
+    max_containers=5  # Limit concurrent containers for cost control
 )
 def _internal_analyze_video(query: str, video_filename: str = "demo_video.mp4"):
     """
@@ -266,7 +267,7 @@ def _internal_analyze_video(query: str, video_filename: str = "demo_video.mp4"):
             model="gemini-2.5-flash",
             contents=[
                 video_file,
-                f"{query}\n\nPlease provide a detailed but focused response within 300-400 words. Do NOT mention specific timestamps unless asked."
+                f"{query}\n\nPlease provide a concise response within 150-200 words. Be direct and informative. Do NOT mention specific timestamps unless asked."
             ]
         )
         
@@ -378,7 +379,8 @@ def _internal_delete_cache(video_filename: str = "demo_video.mp4"):
     image=image,
     volumes={"/data": vol},
     secrets=[Secret.from_name("my-elevenlabs-secret")],
-    timeout=600
+    timeout=600,
+    max_containers=5  # Limit concurrent TTS containers
 )
 def _internal_speak_text(text: str, audio_filename: str = "response.mp3"):
     from elevenlabs.client import ElevenLabs

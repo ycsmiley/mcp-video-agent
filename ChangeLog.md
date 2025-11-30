@@ -1,5 +1,42 @@
 # 變更日誌 (ChangeLog)
 
+## [2024-11-30 16:00] - 優化 Gemini 回應長度與新增並發控制
+
+### 修改 (Modified)
+- **`backend/modal_app.py`**:
+  - 縮短 Gemini 回應長度：從 300-400 words 改為 150-200 words
+  - 新增 `max_containers=5` 限制並發容器數量（成本控制）
+  - 修正 `_internal_speak_text` 函數，新增 `audio_filename` 參數
+
+- **`hf_space/app_standalone.py`**:
+  - 同步更新 Gemini 回應長度限制
+
+### 技術說明
+
+**Gemini Prompt 調整**:
+```python
+# 之前
+f"{query}\n\nPlease provide a detailed but focused response within 300-400 words..."
+
+# 現在
+f"{query}\n\nPlease provide a concise response within 150-200 words. Be direct and informative..."
+```
+
+**Modal 並發控制**:
+```python
+@app.function(
+    ...
+    max_containers=5  # 限制最多 5 個並發容器
+)
+```
+
+**為什麼需要這些改變**:
+1. 較短的回應 = 更快的 TTS 生成 = 更好的用戶體驗
+2. 並發限制 = 成本可控 = 避免意外超支
+3. Modal 內建 queue 機制會自動處理超過限制的請求
+
+---
+
 ## [2024-11-30 15:00] - 新增 Modal Backend 整合與完整安全機制
 
 ### 新增 (Added)
