@@ -1,5 +1,30 @@
 # 變更日誌 (ChangeLog)
 
+## [2024-11-30 16:30] - 暫時停用公開 MCP Server（成本控制）
+
+### 修改 (Modified)
+- **`backend/modal_app.py`**:
+  - 暫時註解掉 `mcp_server` 函數
+  - 防止未經授權的 API 使用
+  - 降低成本風險
+
+- **`hf_space/README.md`**:
+  - 更新 MCP Server 說明
+  - 說明需要聯繫開發者取得 MCP 存取權限
+
+### 原因
+公開的 MCP Server URL 可能被濫用：
+- 任何人知道 URL 都能連接
+- 繞過 HF Space 的 Rate Limiting
+- 無限消耗 API 配額
+
+### 如何重新啟用
+1. 編輯 `backend/modal_app.py`
+2. 取消註解 `mcp_server` 函數
+3. 執行 `modal deploy backend/modal_app.py`
+
+---
+
 ## [2024-11-30 16:00] - 優化 Gemini 回應長度與新增並發控制
 
 ### 修改 (Modified)

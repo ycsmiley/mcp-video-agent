@@ -66,19 +66,12 @@ Unlike traditional video analysis that processes the entire video for every ques
 - **Automatic management**: No manual cache setup required
 
 ### 🔌 4. MCP Server Integration
-Works as an MCP server for Claude Desktop and other MCP clients:
+This application is designed to work as an MCP server for Claude Desktop and other MCP clients.
 
-```json
-{
-  "mcpServers": {
-    "video-agent": {
-      "url": "https://mcp-1st-birthday-video-agent-mcp.hf.space/sse"
-    }
-  }
-}
-```
+**Note**: The public MCP endpoint is currently disabled to prevent unauthorized API usage. 
+If you need MCP access for evaluation, please contact the developer directly.
 
-Enable Claude to analyze videos directly in your conversations!
+The primary way to use this application is through the **HF Space Gradio interface**.
 
 ### 🛡️ 5. Fair Usage & Rate Limiting
 - Built-in rate limiting (10 requests/hour per user)

@@ -434,35 +434,41 @@ def _internal_speak_text(text: str, audio_filename: str = "response.mp3"):
 
 
 # ==========================================
-# MCP Server Interface
+# MCP Server Interface (TEMPORARILY DISABLED FOR COST CONTROL)
 # ==========================================
-@app.function(image=image)
-@asgi_app()
-def mcp_server():
-    from mcp.server.fastapi import FastMCP
-    
-    mcp = FastMCP("VideoAgent")
+# To enable: uncomment the code below and redeploy with `modal deploy backend/modal_app.py`
+# 
+# @app.function(image=image)
+# @asgi_app()
+# def mcp_server():
+#     from mcp.server.fastapi import FastMCP
+#     
+#     mcp = FastMCP("VideoAgent")
+# 
+#     @mcp.tool()
+#     async def analyze_video_tool(question: str) -> str:
+#         """Analyze the video using cached context or direct upload."""
+#         print(f"📡 MCP Request: Analyze Video - {question}")
+#         return _internal_analyze_video.remote(question)
+# 
+#     @mcp.tool()
+#     async def create_cache_tool(video_filename: str = "demo_video.mp4") -> str:
+#         """Create a context cache for faster video queries."""
+#         print(f"📡 MCP Request: Create Cache - {video_filename}")
+#         result = _internal_create_cache.remote(video_filename)
+#         return f"Cache status: {result.get('status', 'unknown')} - {result.get('message', '')}"
+# 
+#     @mcp.tool()
+#     async def speak_text_tool(text_to_speak: str) -> str:
+#         """Convert text to speech using ElevenLabs."""
+#         print(f"📡 MCP Request: Speak Text")
+#         return _internal_speak_text.remote(text_to_speak)
+# 
+#     return mcp.app
 
-    @mcp.tool()
-    async def analyze_video_tool(question: str) -> str:
-        """Analyze the video using cached context or direct upload."""
-        print(f"📡 MCP Request: Analyze Video - {question}")
-        return _internal_analyze_video.remote(question)
-
-    @mcp.tool()
-    async def create_cache_tool(video_filename: str = "demo_video.mp4") -> str:
-        """Create a context cache for faster video queries."""
-        print(f"📡 MCP Request: Create Cache - {video_filename}")
-        result = _internal_create_cache.remote(video_filename)
-        return f"Cache status: {result.get('status', 'unknown')} - {result.get('message', '')}"
-
-    @mcp.tool()
-    async def speak_text_tool(text_to_speak: str) -> str:
-        """Convert text to speech using ElevenLabs."""
-        print(f"📡 MCP Request: Speak Text")
-        return _internal_speak_text.remote(text_to_speak)
-
-    return mcp.app
+# Note: MCP Server is temporarily disabled to prevent unauthorized API usage.
+# The HF Space Gradio interface is the primary way to use this application.
+# Contact the developer if you need MCP access for evaluation.
 
 
 # ==========================================
