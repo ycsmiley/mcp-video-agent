@@ -315,15 +315,15 @@ Want to use this without limits?
 
 ## 📱 Social Media & Community
 
-### 🐦 Project Announcement
-[🔗 X/Twitter Post](#) *(Link to announcement post)*
+### 📝 Project Announcement
+[🔗 LinkedIn Post](https://www.linkedin.com/posts/ycsmiley_%F0%9D%97%9C-%F0%9D%97%BD%F0%9D%97%AE%F0%9D%97%BF%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B6%F0%9D%97%BD%F0%9D%97%AE%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%B1-%F0%9D%97%B6%F0%9D%97%BB-%F0%9D%98%81%F0%9D%97%B5%F0%9D%97%B2-hugging-activity-7400829359420403712-86rA)
 
 ### 💬 Discussions
 Have questions or feedback? Visit the [Discussions tab](#discussions) on this Space!
 
 ### 👥 Team
-- Built by: [Your Name/Team]
-- Contact: [Your contact info]
+- Built by: [Yu Cheng Lin](https://www.linkedin.com/in/ycsmiley/)
+- GitHub: [ycsmiley](https://github.com/ycsmiley)
 
 ---
 
