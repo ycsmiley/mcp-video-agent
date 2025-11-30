@@ -253,18 +253,6 @@ text_response = analyze_fn.remote(query, video_filename=unique_filename)
 
 ---
 
-## 🎬 Demo Video
-
-[📺 Watch the demo video](#) *(Link to be added)*
-
-### Key Features Demonstrated:
-1. Initial video upload and analysis
-2. Multiple follow-up questions showing cache speed
-3. Voice response playback
-4. MCP integration with Claude Desktop
-
----
-
 ## 🏆 Hackathon Submission Details
 
 ### Categories
